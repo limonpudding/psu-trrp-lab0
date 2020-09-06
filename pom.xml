@@ -8,4 +8,204 @@
     <artifactId>psu-trrp-lab0</artifactId>
     <version>0.0.1</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>3.13.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen-maven</artifactId>
+            <version>3.13.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>3.13.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.firebirdsql.jdbc</groupId>
+            <artifactId>jaybird</artifactId>
+            <version>4.0.1.java8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>5.5.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.14</version>
+        </dependency>
+
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <fb_url>jdbc:firebirdsql:local:/home/kepouch/test.fdb</fb_url>
+                <fb_username>sysdba</fb_username>
+                <fb_password>masterkey</fb_password>
+                <pg_url>jdbc:postgresql://127.0.0.1:5432/psu-courses?currentSchema=psu-courses</pg_url>
+                <pg_username>admin</pg_username>
+                <pg_password>admin</pg_password>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>3.13.2</version>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.jooq</groupId>
+                    <artifactId>jooq-codegen-maven</artifactId>
+                    <version>3.13.2</version>
+
+                    <executions>
+                        <execution>
+                            <id>GenerateFirebird</id>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                            <configuration>
+                                <jdbc>
+                                    <driver>org.firebirdsql.jdbc.FBDriver</driver>
+                                    <url>${fb_url}</url>
+                                    <username>${fb_username}</username>
+                                    <password>${fb_password}</password>
+                                    <properties>
+                                        <property>
+                                            <key>charSet</key>
+                                            <value>utf-8</value>
+                                        </property>
+                                    </properties>
+                                </jdbc>
+
+                                <generator>
+                                    <database>
+                                        <name>org.jooq.meta.firebird.FirebirdDatabase</name>
+                                        <includes>.*</includes>
+                                        <schemata>
+                                            <schema>
+                                                <inputSchema></inputSchema>
+                                            </schema>
+                                        </schemata>
+                                        <excludes>
+                                            RDB\$.*
+                                            | MON\$.*
+                                            | SEC\$.*
+                                        </excludes>
+                                    </database>
+                                    <target>
+                                        <packageName>ru.psu.martyshenko.trrp.lab0.fb</packageName>
+                                        <directory>target/generated-sources/jooq</directory>
+                                    </target>
+
+                                    <generate>
+                                        <pojos>true</pojos>
+                                        <daos>true</daos>
+                                        <sequences>true</sequences>
+                                        <globalObjectReferences>true</globalObjectReferences>
+                                        <javaTimeTypes>true</javaTimeTypes>
+                                    </generate>
+                                </generator>
+                            </configuration>
+                        </execution>
+
+                        <execution>
+                            <id>GeneratePostgresQL</id>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                            <configuration>
+                                <jdbc>
+                                    <driver>org.postgresql.Driver</driver>
+                                    <url>${pg_url}</url>
+                                    <username>${pg_username}</username>
+                                    <password>${pg_password}</password>
+                                    <properties>
+                                        <property>
+                                            <key>charSet</key>
+                                            <value>utf-8</value>
+                                        </property>
+                                    </properties>
+                                </jdbc>
+
+                                <generator>
+                                    <database>
+                                        <name>org.jooq.meta.postgres.PostgresDatabase</name>
+                                        <includes>.*</includes>
+                                        <schemata>
+                                            <schema>
+                                                <inputSchema>psu-courses</inputSchema>
+                                            </schema>
+                                        </schemata>
+                                    </database>
+                                    <target>
+                                        <packageName>ru.psu.martyshenko.trrp.lab0.pg</packageName>
+                                        <directory>target/generated-sources/jooq</directory>
+                                    </target>
+
+                                    <generate>
+                                        <pojos>true</pojos>
+                                        <daos>true</daos>
+                                        <sequences>true</sequences>
+                                        <globalObjectReferences>true</globalObjectReferences>
+                                        <javaTimeTypes>true</javaTimeTypes>
+                                    </generate>
+                                </generator>
+                            </configuration>
+                        </execution>
+                    </executions>
+
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.firebirdsql.jdbc</groupId>
+                            <artifactId>jaybird</artifactId>
+                            <version>4.0.1.java8</version>
+                        </dependency>
+
+                        <dependency>
+                            <groupId>net.java.dev.jna</groupId>
+                            <artifactId>jna</artifactId>
+                            <version>5.5.0</version>
+                        </dependency>
+
+                        <dependency>
+                            <groupId>org.postgresql</groupId>
+                            <artifactId>postgresql</artifactId>
+                            <version>42.2.14</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version>
+                    <configuration>
+                        <source>8</source>
+                        <target>8</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

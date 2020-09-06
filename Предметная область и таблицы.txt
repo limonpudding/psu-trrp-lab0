@@ -5,10 +5,10 @@ Table UNF {
   course_total_hours int
   teacher_name varchar
   teacher_mail varchar
-  teacher_phone int
-  lesson_datetime datetime
+  teacher_phone bigint
+  lesson_datetime timestamp
   lesson_hours int
-  classroom_number int
+  classroom_number varchar
   building varchar
   building_address varchar
 }
@@ -22,12 +22,12 @@ Table 1NF {
   teacher_first_name varchar
   teacher_patronymic varchar
   teacher_mail varchar
-  teacher_phone int
+  teacher_phone bigint
   lesson_id int [pk]
-  lesson_datetime datetime
+  lesson_datetime timestamp
   lesson_hours int
   classroom_id int [pk]
-  classroom_number int
+  classroom_number varchar
   building varchar
   building_address varchar
 }
@@ -47,12 +47,12 @@ Table teacher {
   teacher_first_name varchar
   teacher_patronymic varchar
   teacher_mail varchar
-  teacher_phone int
+  teacher_phone bigint
 }
 
 Table lesson {
   lesson_id int [pk]
-  lesson_datetime datetime
+  lesson_datetime timestamp
   lesson_hours int
   course_id int [ref: > course.course_id]
   classroom_id int [ref: > classroom.classroom_id]
@@ -60,7 +60,7 @@ Table lesson {
 
 Table classroom {
   classroom_id int [pk]
-  classroom_number int
+  classroom_number varchar
   building varchar
   building_address varchar
 }
@@ -80,12 +80,12 @@ Table teacher {
   teacher_first_name varchar
   teacher_patronymic varchar
   teacher_mail varchar
-  teacher_phone int
+  teacher_phone bigint
 }
 
 Table lesson {
   lesson_id int [pk]
-  lesson_datetime datetime
+  lesson_datetime timestamp
   lesson_hours int
   course_id int [ref: > course.course_id]
   classroom_id int [ref: > classroom.classroom_id]
@@ -93,7 +93,7 @@ Table lesson {
 
 Table classroom {
   classroom_id int [pk]
-  classroom_number int
+  classroom_number varchar
   building int [ref: > building.building]
 }
 
