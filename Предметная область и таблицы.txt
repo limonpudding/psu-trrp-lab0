@@ -1,0 +1,103 @@
+Предметная область: Курсы доп. образования и повышения квалификации в ПГНИУ
+
+Table UNF {
+  course_name varchar
+  course_total_hours int
+  teacher_name varchar
+  teacher_mail varchar
+  teacher_phone int
+  lesson_datetime datetime
+  lesson_hours int
+  classroom_number int
+  building varchar
+  building_address varchar
+}
+
+Table 1NF {
+  course_id int [pk]
+  course_name varchar
+  course_total_hours int
+  teacher_id int [pk]
+  teacher_last_name varchar
+  teacher_first_name varchar
+  teacher_patronymic varchar
+  teacher_mail varchar
+  teacher_phone int
+  lesson_id int [pk]
+  lesson_datetime datetime
+  lesson_hours int
+  classroom_id int [pk]
+  classroom_number int
+  building varchar
+  building_address varchar
+}
+
+//2NF
+
+Table course {
+  course_id int [pk]
+  course_name varchar
+  course_total_hours int
+  teacher_id varchar [ref: > teacher.teacher_id]
+}
+
+Table teacher {
+  teacher_id int [pk]
+  teacher_last_name varchar
+  teacher_first_name varchar
+  teacher_patronymic varchar
+  teacher_mail varchar
+  teacher_phone int
+}
+
+Table lesson {
+  lesson_id int [pk]
+  lesson_datetime datetime
+  lesson_hours int
+  course_id int [ref: > course.course_id]
+  classroom_id int [ref: > classroom.classroom_id]
+}
+
+Table classroom {
+  classroom_id int [pk]
+  classroom_number int
+  building varchar
+  building_address varchar
+}
+
+//3NF
+
+Table course {
+  course_id int [pk]
+  course_name varchar
+  course_total_hours int
+  teacher_id varchar [ref: > teacher.teacher_id]
+}
+
+Table teacher {
+  teacher_id int [pk]
+  teacher_last_name varchar
+  teacher_first_name varchar
+  teacher_patronymic varchar
+  teacher_mail varchar
+  teacher_phone int
+}
+
+Table lesson {
+  lesson_id int [pk]
+  lesson_datetime datetime
+  lesson_hours int
+  course_id int [ref: > course.course_id]
+  classroom_id int [ref: > classroom.classroom_id]
+}
+
+Table classroom {
+  classroom_id int [pk]
+  classroom_number int
+  building int [ref: > building.building]
+}
+
+Table building {
+  building varchar [pk]
+  building_address varchar
+}
