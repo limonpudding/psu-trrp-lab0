@@ -11,6 +11,7 @@ import ru.psu.martyshenko.trrp.lab0.pg.tables.pojos.Classroom;
 import ru.psu.martyshenko.trrp.lab0.pg.tables.records.ClassroomRecord;
 
 import java.sql.Connection;
+import java.util.List;
 
 import static org.jooq.SQLDialect.POSTGRES;
 import static ru.psu.martyshenko.trrp.lab0.pg.tables.Classroom.CLASSROOM;
@@ -41,5 +42,9 @@ public class ClassroomService {
             dao.insert(classroom);
             return id;
         }
+    }
+
+    public List<Classroom> getAll() {
+        return context.selectFrom(CLASSROOM).fetchInto(Classroom.class);
     }
 }

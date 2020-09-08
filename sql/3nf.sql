@@ -4,7 +4,6 @@ drop table if exists TEACHER;
 drop table if exists CLASSROOM;
 drop table if exists BUILDING;
 
-
 create table if not exists BUILDING
 (
     building         varchar primary key,

@@ -1,6 +1,3 @@
-
-drop table PSU_COURSES;
-
 create table PSU_COURSES
 (
     COURSE_NAME        VARCHAR(256),
@@ -69,5 +66,3 @@ insert into PSU_COURSES (COURSE_NAME, COURSE_TOTAL_HOURS, TEACHER_NAME, TEACHER_
 ('Программирование на языке Python', 118, 'Конюхов Игорь Сергеевич', 'igor_konuhov@psu.ru', 89197143955, timestamp '2020-11-13 10:00', 2, '308', 'Корпус 2', 'Генкеля 7');
 insert into PSU_COURSES (COURSE_NAME, COURSE_TOTAL_HOURS, TEACHER_NAME, TEACHER_MAIL, TEACHER_PHONE, LESSON_DATETIME, LESSON_HOURS, CLASSROOM_NUMBER, BUILDING, BUILDING_ADDRESS) values
 ('Программирование на языке Python', 118, 'Конюхов Игорь Сергеевич', 'igor_konuhov@psu.ru', 89197143955, timestamp '2020-11-20 10:00', 2, '308', 'Корпус 2', 'Генкеля 7');
-
-select * from PSU_COURSES;

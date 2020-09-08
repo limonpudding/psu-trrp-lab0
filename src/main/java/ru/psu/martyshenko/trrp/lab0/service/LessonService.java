@@ -11,6 +11,7 @@ import ru.psu.martyshenko.trrp.lab0.pg.tables.pojos.Lesson;
 import ru.psu.martyshenko.trrp.lab0.pg.tables.records.LessonRecord;
 
 import java.sql.Connection;
+import java.util.List;
 
 import static org.jooq.SQLDialect.POSTGRES;
 import static ru.psu.martyshenko.trrp.lab0.pg.tables.Lesson.LESSON;
@@ -43,5 +44,9 @@ public class LessonService {
             dao.insert(lesson);
             return id;
         }
+    }
+
+    public List<Lesson> getAll() {
+        return context.selectFrom(LESSON).fetchInto(Lesson.class);
     }
 }

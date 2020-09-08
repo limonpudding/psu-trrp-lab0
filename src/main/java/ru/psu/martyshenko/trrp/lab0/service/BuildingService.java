@@ -32,4 +32,8 @@ public class BuildingService {
             dao.insert(building);
         }
     }
+
+    public List<Building> getAll() {
+        return context.selectFrom(BUILDING).fetchInto(Building.class);
+    }
 }

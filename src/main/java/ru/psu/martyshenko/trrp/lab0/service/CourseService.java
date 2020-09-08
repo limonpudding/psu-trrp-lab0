@@ -11,6 +11,7 @@ import ru.psu.martyshenko.trrp.lab0.pg.tables.pojos.Course;
 import ru.psu.martyshenko.trrp.lab0.pg.tables.records.CourseRecord;
 
 import java.sql.Connection;
+import java.util.List;
 
 import static org.jooq.SQLDialect.POSTGRES;
 import static ru.psu.martyshenko.trrp.lab0.pg.tables.Course.COURSE;
@@ -44,5 +45,7 @@ public class CourseService {
         }
     }
 
-
+    public List<Course> getAll() {
+        return context.selectFrom(COURSE).fetchInto(Course.class);
+    }
 }

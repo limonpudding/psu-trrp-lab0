@@ -11,6 +11,7 @@ import ru.psu.martyshenko.trrp.lab0.pg.tables.pojos.Teacher;
 import ru.psu.martyshenko.trrp.lab0.pg.tables.records.TeacherRecord;
 
 import java.sql.Connection;
+import java.util.List;
 
 import static org.jooq.SQLDialect.POSTGRES;
 import static ru.psu.martyshenko.trrp.lab0.pg.tables.Teacher.TEACHER;
@@ -44,5 +45,9 @@ public class TeacherService {
             dao.insert(teacher);
             return id;
         }
+    }
+
+    public List<Teacher> getAll() {
+        return context.selectFrom(TEACHER).fetchInto(Teacher.class);
     }
 }
