@@ -49,8 +49,19 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>4.1.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.26</version>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -68,25 +79,118 @@
     </profiles>
 
     <build>
-
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.jooq</groupId>
                 <artifactId>jooq-codegen-maven</artifactId>
                 <version>3.13.2</version>
-            </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>ru.psu.martyshenko.trrp.lab0.app.Application</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
+                <executions>
+                    <execution>
+                        <id>GenerateFirebird</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <jdbc>
+                                <driver>org.firebirdsql.jdbc.FBDriver</driver>
+                                <url>${fb_url}</url>
+                                <username>${fb_username}</username>
+                                <password>${fb_password}</password>
+                                <properties>
+                                    <property>
+                                        <key>charSet</key>
+                                        <value>utf-8</value>
+                                    </property>
+                                </properties>
+                            </jdbc>
+
+                            <generator>
+                                <database>
+                                    <name>org.jooq.meta.firebird.FirebirdDatabase</name>
+                                    <includes>.*</includes>
+                                    <schemata>
+                                        <schema>
+                                            <inputSchema></inputSchema>
+                                        </schema>
+                                    </schemata>
+                                    <excludes>
+                                        RDB\$.*
+                                        | MON\$.*
+                                        | SEC\$.*
+                                    </excludes>
+                                </database>
+                                <target>
+                                    <packageName>ru.psu.martyshenko.trrp.lab0.fb</packageName>
+                                    <directory>target/generated-sources/jooq</directory>
+                                </target>
+
+                                <generate>
+                                    <pojos>true</pojos>
+                                    <daos>true</daos>
+                                    <sequences>true</sequences>
+                                    <globalObjectReferences>true</globalObjectReferences>
+                                    <javaTimeTypes>true</javaTimeTypes>
+                                </generate>
+                            </generator>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>GeneratePostgresQL</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <jdbc>
+                                <driver>org.postgresql.Driver</driver>
+                                <url>${pg_url}</url>
+                                <username>${pg_username}</username>
+                                <password>${pg_password}</password>
+                                <properties>
+                                    <property>
+                                        <key>charSet</key>
+                                        <value>utf-8</value>
+                                    </property>
+                                </properties>
+                            </jdbc>
+
+                            <generator>
+                                <database>
+                                    <name>org.jooq.meta.postgres.PostgresDatabase</name>
+                                    <includes>.*</includes>
+                                    <schemata>
+                                        <schema>
+                                            <inputSchema>psu-courses</inputSchema>
+                                        </schema>
+                                    </schemata>
+                                </database>
+                                <target>
+                                    <packageName>ru.psu.martyshenko.trrp.lab0.pg</packageName>
+                                    <directory>target/generated-sources/jooq</directory>
+                                </target>
+
+                                <generate>
+                                    <pojos>true</pojos>
+                                    <daos>true</daos>
+                                    <sequences>true</sequences>
+                                    <globalObjectReferences>true</globalObjectReferences>
+                                    <javaTimeTypes>true</javaTimeTypes>
+                                </generate>
+                            </generator>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -99,146 +203,16 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>ru.psu.martyshenko.trrp.lab0.app.Application</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
-
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.jooq</groupId>
-                    <artifactId>jooq-codegen-maven</artifactId>
-                    <version>3.13.2</version>
-
-                    <executions>
-                        <execution>
-                            <id>GenerateFirebird</id>
-                            <goals>
-                                <goal>generate</goal>
-                            </goals>
-                            <configuration>
-                                <jdbc>
-                                    <driver>org.firebirdsql.jdbc.FBDriver</driver>
-                                    <url>${fb_url}</url>
-                                    <username>${fb_username}</username>
-                                    <password>${fb_password}</password>
-                                    <properties>
-                                        <property>
-                                            <key>charSet</key>
-                                            <value>utf-8</value>
-                                        </property>
-                                    </properties>
-                                </jdbc>
-
-                                <generator>
-                                    <database>
-                                        <name>org.jooq.meta.firebird.FirebirdDatabase</name>
-                                        <includes>.*</includes>
-                                        <schemata>
-                                            <schema>
-                                                <inputSchema></inputSchema>
-                                            </schema>
-                                        </schemata>
-                                        <excludes>
-                                            RDB\$.*
-                                            | MON\$.*
-                                            | SEC\$.*
-                                        </excludes>
-                                    </database>
-                                    <target>
-                                        <packageName>ru.psu.martyshenko.trrp.lab0.fb</packageName>
-                                        <directory>target/generated-sources/jooq</directory>
-                                    </target>
-
-                                    <generate>
-                                        <pojos>true</pojos>
-                                        <daos>true</daos>
-                                        <sequences>true</sequences>
-                                        <globalObjectReferences>true</globalObjectReferences>
-                                        <javaTimeTypes>true</javaTimeTypes>
-                                    </generate>
-                                </generator>
-                            </configuration>
-                        </execution>
-
-                        <execution>
-                            <id>GeneratePostgresQL</id>
-                            <goals>
-                                <goal>generate</goal>
-                            </goals>
-                            <configuration>
-                                <jdbc>
-                                    <driver>org.postgresql.Driver</driver>
-                                    <url>${pg_url}</url>
-                                    <username>${pg_username}</username>
-                                    <password>${pg_password}</password>
-                                    <properties>
-                                        <property>
-                                            <key>charSet</key>
-                                            <value>utf-8</value>
-                                        </property>
-                                    </properties>
-                                </jdbc>
-
-                                <generator>
-                                    <database>
-                                        <name>org.jooq.meta.postgres.PostgresDatabase</name>
-                                        <includes>.*</includes>
-                                        <schemata>
-                                            <schema>
-                                                <inputSchema>psu-courses</inputSchema>
-                                            </schema>
-                                        </schemata>
-                                    </database>
-                                    <target>
-                                        <packageName>ru.psu.martyshenko.trrp.lab0.pg</packageName>
-                                        <directory>target/generated-sources/jooq</directory>
-                                    </target>
-
-                                    <generate>
-                                        <pojos>true</pojos>
-                                        <daos>true</daos>
-                                        <sequences>true</sequences>
-                                        <globalObjectReferences>true</globalObjectReferences>
-                                        <javaTimeTypes>true</javaTimeTypes>
-                                    </generate>
-                                </generator>
-                            </configuration>
-                        </execution>
-                    </executions>
-
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.firebirdsql.jdbc</groupId>
-                            <artifactId>jaybird</artifactId>
-                            <version>4.0.1.java8</version>
-                        </dependency>
-
-                        <dependency>
-                            <groupId>net.java.dev.jna</groupId>
-                            <artifactId>jna</artifactId>
-                            <version>5.5.0</version>
-                        </dependency>
-
-                        <dependency>
-                            <groupId>org.postgresql</groupId>
-                            <artifactId>postgresql</artifactId>
-                            <version>42.2.16</version>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
-                    <configuration>
-                        <source>8</source>
-                        <target>8</target>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 </project>

@@ -20,6 +20,7 @@ public class DataSourcePostgres {
     public static DataSourcePostgres getInstance() {
         if (instance == null) {
             try {
+                DriverManager.registerDriver(new org.postgresql.Driver());
                 Connection connection = DriverManager.getConnection(url, user, password);
                 instance = new DataSourcePostgres(connection);
             } catch (SQLException throwables) {

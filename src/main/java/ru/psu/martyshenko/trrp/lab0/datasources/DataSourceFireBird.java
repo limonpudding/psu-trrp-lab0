@@ -20,6 +20,7 @@ public class DataSourceFireBird {
     public static DataSourceFireBird getInstance() {
         if (instance == null) {
             try {
+                DriverManager.registerDriver(new org.firebirdsql.jdbc.FBDriver());
                 Connection connection = DriverManager.getConnection(url, user, password);
                 instance = new DataSourceFireBird(connection);
             } catch (SQLException throwables) {

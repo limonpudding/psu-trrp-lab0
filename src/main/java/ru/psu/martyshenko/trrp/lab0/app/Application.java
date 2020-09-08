@@ -1,10 +1,6 @@
 package ru.psu.martyshenko.trrp.lab0.app;
 
-import org.jooq.meta.derby.sys.Sys;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Scanner;
 
 public class Application {
